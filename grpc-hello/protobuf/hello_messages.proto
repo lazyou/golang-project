@@ -1,8 +1,11 @@
 // hello 服务所用的 message 定义
 syntax = "proto3";
 
-package protobuf;
+package hello;
+
 import "common_messages.proto";
+
+option go_package="../protobuf_gen;protobuf_gen";
 
 // 请求
 message HelloRequest {
@@ -11,6 +14,6 @@ message HelloRequest {
 
 // 响应
 message HelloResponse {
-	BaseResponse result = 1;
+	common.BaseResponse result = 1;
 	string message = 2;
 }

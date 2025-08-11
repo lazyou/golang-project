@@ -1,7 +1,9 @@
 // hello 服务定义
 syntax = "proto3";
 
-package protobuf;
+package hello;
+
+option go_package="../protobuf_gen;protobuf_gen";
 
 import public "hello_messages.proto";
 

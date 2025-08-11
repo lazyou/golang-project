@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/grpclog"
 	"log"
 	"net"
-	"test/protobuf"
+	"test/protobuf_gen"
 	"test/services"
 )
 
@@ -31,8 +31,8 @@ func main() {
 	}
 
 	// 服务端实现: 提供一个 gRPC 服务的另一个主要功能是让这个服务实在在网络上可用
-	s := grpc.NewServer(grpc.Creds(credential))              // 并开启TLS认证
-	protobuf.RegisterHelloServer(s, &services.HelloServer{}) // 注册服务
+	s := grpc.NewServer(grpc.Creds(credential))                  // 并开启TLS认证
+	protobuf_gen.RegisterHelloServer(s, &services.HelloServer{}) // 注册服务
 
 	if err := s.Serve(listen); err != nil {
 		grpclog.Fatalf("failed to serve: %v", err)

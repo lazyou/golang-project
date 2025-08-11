@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"test/protobuf"
+	"test/protobuf_gen"
 )
 
 const (
@@ -21,21 +21,21 @@ const (
 
 func main() {
 	// TLS连接
-	credential, err := credentials.NewClientTLSFromFile("../keys/server.pem", "lin")
+	credential, err := credentials.NewClientTLSFromFile("../keys/server.pem", "")
 	if err != nil {
 		grpclog.Fatalf("Failed to create TLS credentials %v", err)
 	}
 
 	// Set up a connection to the server.
-	// 连接服务: 在 gRPC Go 是使用一个特殊的 Dial() 方法来创建频道
-	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(credential))
+	// 创建一个到远程 gRPC 服务器的客户端连接（Connection
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(credential))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 
-	// 与 RPC 服务器连接的客户端
-	helloClient := protobuf.NewHelloClient(conn)
+	// 创建一个“客户端存根（Client Stub）”
+	helloClient := protobuf_gen.NewHelloClient(conn)
 
 	// Contact the server and print out its response.
 	name := defaultName
@@ -43,20 +43,20 @@ func main() {
 		name = os.Args[1]
 	}
 
-	// TODO: context 这部分看不懂
+	// context 进行超时控制: 防止请求无限挂起
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	// 客户端调用 RPC 方法, 接收服务端返回值
-	result, err := helloClient.SayHello(ctx, &protobuf.HelloRequest{Name: name})
+	// 客户端调用 【一元RPC 方法】
+	result, err := helloClient.SayHello(ctx, &protobuf_gen.HelloRequest{Name: name})
 	if err != nil {
 		log.Fatalf("SayHello err: %v", err)
 	}
 
 	log.Printf("SayHello: %s", result.Message)
 
-	// 客户端调用 RPC 服务端流方法
-	stream, err := helloClient.SayHelloServerStream(context.Background(), &protobuf.HelloRequest{Name: name})
+	// 客户端调用 【服务端流RPC 方法】
+	stream, err := helloClient.SayHelloServerStream(context.Background(), &protobuf_gen.HelloRequest{Name: name})
 	if err != nil {
 		log.Printf("ServerStream: %s", result.Message)
 	}
@@ -68,11 +68,10 @@ func main() {
 			break
 		}
 
-		if err != nil {
+		if err != nil { // 服务端 ctrl+ c 中断会触发
 			log.Fatalf("ServerStream err: %v\n", err)
 		}
 
 		log.Printf("ServerStream: %s", streamResult)
 	}
-
 }

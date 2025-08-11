@@ -1,8 +1,14 @@
-// 公共(通用) message 定义
+// 公共(通用) message 定义 - 被【嵌套】使用
 
 syntax = "proto3";
 
-package protobuf;
+// protobuf 的包名，不是 Go 的。
+// 在 hello_messages.proto 就得以 common.BaseResponse 包名形式嵌入
+package common;
+
+// .proto 通过 protoc 生成go代码的【路径和包名】
+// option go_package="your-module-path/path/to/your/package;yourgopackage";
+option go_package="../protobuf_gen;protobuf_gen";
 
 // 基础响应
 message BaseResponse {
