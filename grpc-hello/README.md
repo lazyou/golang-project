@@ -107,3 +107,11 @@
   * 调用rpc服务01: 客户端调用 【一元RPC 方法】
 
   * 调用rpc服务02: 客户端调用 【服务端流RPC 方法】
+
+
+### 6. 调用
+```shell
+cd main
+go run .\server.go
+go run .\client.go
+```
