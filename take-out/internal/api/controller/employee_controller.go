@@ -15,24 +15,35 @@ type EmployeeController struct {
 }
 
 func NewEmployeeController(employeeService service.IEmployeeService) *EmployeeController {
-	return &EmployeeController{service: employeeService}
+	return &EmployeeController{
+		service: employeeService,
+	}
 }
 
 // Login 员工登录
 func (ec *EmployeeController) Login(ctx *gin.Context) {
+	// 请求解析
 	employeeLogin := request.EmployeeLogin{}
 	err := ctx.Bind(&employeeLogin)
 	if err != nil {
 		global.Log.ErrContext(ctx, "EmployeeController login 解析失败")
+		// 【重点】出错实际在这里封装了响应在 retcode 包
+		// 【重点】不像php的web框架在路由做响应, 这里主要靠 ctx *gin.Context 做响应
 		retcode.Fatal(ctx, err, "")
+		// 【重点】return 只是为了中断后续的执行, 并不在外部做响应处理
 		return
 	}
+
+	// 业务封装处理 -  service 是面向接口编程. 路由 -> 控制器 -> service -> dao
+	// 1. service 之间不互相调用, 但实际业务好像比较难做到这样!)
+	// 2. 这里 ctx *gin.Context 实现自 context/context.go 接口, service 里面形参接收 context 接口, 而不再是 *gin.Context 结构体
 	resp, err := ec.service.Login(ctx, employeeLogin)
 	if err != nil {
 		global.Log.ErrContext(ctx, "EmployeeController login Error: err=%s", err.Error())
 		retcode.Fatal(ctx, err, "")
 		return
 	}
+
 	retcode.OK(ctx, resp)
 }
 

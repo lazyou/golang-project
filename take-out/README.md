@@ -22,7 +22,18 @@
 
 * 小程序端没有给代码, 忽略
 
-* TODO: 好家伙, 前端的路由和后端基本对不上.
+* TODO: 好家伙, 登录后接口也没法用, 前端代码白费!
+
+# TIP
+* 全局对象声明 `global/global.go`, 并在 `initialize/enter.go` 初始话它们的内容
+  * `initialize` 目录下初始化 `config, gorm, redis, log, router` 等外部工具!
+
+* 事务管理接口, 方便切换不同数据库的事务 `global/tx/transactionManager.go`
+  * 而 `global/tx/gormTx.go` 是对 事务管理接口 的实现
+
+* 业务封装处理 -  service 是面向接口编程. **路由 -> 控制器 -> service -> dao**
+  1. service 之间不互相调用, 但实际业务容易出现 service 互相调用的情况!
+  2. service 里面形参接收 context `接口`, 而不再是 *gin.Context `结构体`
 
 
 # =============== 以下保留作者原 README ===============

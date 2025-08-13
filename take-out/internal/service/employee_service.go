@@ -149,19 +149,23 @@ func (ei *EmployeeImpl) Logout(ctx context.Context) error {
 
 func (ei *EmployeeImpl) Login(ctx context.Context, employeeLogin request.EmployeeLogin) (*response.EmployeeLogin, error) {
 	// 1.查询用户是否存在
+	// 【重要】这里查询居然还要穿 context 过去!
 	employee, err := ei.repo.GetByUserName(ctx, employeeLogin.UserName)
 	if err != nil || employee == nil {
 		return nil, retcode.NewError(e.ErrorAccountNotFound, e.GetMsg(e.ErrorAccountNotFound))
 	}
+
 	// 2.校验密码
 	password := utils.MD5V(employeeLogin.Password, "", 0)
 	if password != employee.Password {
 		return nil, retcode.NewError(e.ErrorPasswordError, e.GetMsg(e.ErrorPasswordError))
 	}
+
 	// 3.校验状态
 	if employee.Status == enum.DISABLE {
 		return nil, retcode.NewError(e.ErrorAccountLOCKED, e.GetMsg(e.ErrorAccountLOCKED))
 	}
+
 	// 生成Token
 	jwtConfig := global.Config.Jwt.Admin
 	token, err := utils.GenerateToken(employee.Id, jwtConfig.Name, jwtConfig.Secret)
@@ -169,6 +173,7 @@ func (ei *EmployeeImpl) Login(ctx context.Context, employeeLogin request.Employe
 		global.Log.ErrContext(ctx, "EmployeeImpl.Login failed, err: %v", err)
 		return nil, err
 	}
+
 	// 4.构造返回数据
 	resp := response.EmployeeLogin{
 		Id:       employee.Id,
@@ -176,6 +181,7 @@ func (ei *EmployeeImpl) Login(ctx context.Context, employeeLogin request.Employe
 		Token:    token,
 		UserName: employee.Username,
 	}
+
 	return &resp, nil
 }
 

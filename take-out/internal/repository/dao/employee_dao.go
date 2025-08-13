@@ -81,8 +81,12 @@ func (d *EmployeeDao) Update(ctx context.Context, employee model.Employee) error
 
 func (d *EmployeeDao) GetByUserName(ctx context.Context, userName string) (*model.Employee, error) {
 	var employee model.Employee
+	// 【重要】 grom 数据库查询需要传 context, 作用是什么 -
+	// https://gorm.io/docs/session.html#Context  - 通过 Context 选项，您可以传入 Context 来追踪 SQL 操作
+	// 【通义】1. 超时控制（Timeout）;  2. 请求取消（Cancellation）; 3. 传递请求级数据（如 trace_id、用户ID 等）
 	err := d.db.WithContext(ctx).Where("username=?", userName).First(&employee).Error
 	if err != nil {
+		// 【重要】 context 传递请求级数据（如 trace_id、用户ID 等）
 		global.Log.ErrContext(ctx, "EmployeeDao.GetByUserName failed, err: %v", err)
 		return nil, retcode.NewError(e.MysqlERR, "Get employee failed")
 	}
