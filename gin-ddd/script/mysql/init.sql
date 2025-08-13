@@ -1,3 +1,3 @@
-create database if not exists `xmlt_make`;
-create database if not exists `xmlt_online`;
-create database if not exists `integration_tests`;
+create database if not exists `gin_ddd_make`;
+create database if not exists `gin_ddd_online`;
+create database if not exists `gin_ddd_integration_tests`;

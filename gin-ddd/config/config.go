@@ -26,7 +26,7 @@ func InitLoadConfig() *AllConfig {
 		panic(fmt.Errorf("read config file to struct err: %s\n", err))
 	}
 	// 打印配置文件信息
-	fmt.Println(configData)
+	fmt.Printf("%#v", configData)
 	return configData
 }
 
@@ -38,6 +38,8 @@ type AllConfig struct {
 	LogSet      LogSet   `json:"log_set" yaml:"logSet"`
 	MysqlMake   Mysql    `json:"mysql_make" yaml:"mysqlMake"`
 	MysqlOnline Mysql    `json:"mysql_online" yaml:"mysqlOnline"`
+	RabbitMQ    RabbitMQ `json:"rabbit_mq" yaml:"rabbitMq"`
+	Redis       Redis    `json:"redis" yaml:"redis"`
 }
 
 type Server struct {
@@ -64,4 +66,10 @@ type LogSet struct {
 	LogFilePath string `json:"log_file_path" yaml:"logFilePath"`
 	LogFileName string `json:"log_file_name" yaml:"logFileName"`
 	SaveMaxURI  int    `json:"save_max_uri" yaml:"saveMaxURI"`
+}
+
+type Redis struct {
+	Addr string `json:"addr" yaml:"addr"`
+	Pass string `json:"pass" yaml:"pass"`
+	DB   int    `json:"db" yaml:"db"`
 }

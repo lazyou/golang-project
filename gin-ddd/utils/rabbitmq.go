@@ -16,7 +16,10 @@ type RabbitMQ struct {
 	RoutingKey string
 }
 
+var rabbitMqDsn = ""
+
 func NewRabbitMQ(queueName, exchange, routingKey, dsn string) *RabbitMQ {
+	rabbitMqDsn = dsn
 	rabbitmq := RabbitMQ{
 		QueueName:  queueName,
 		Exchange:   exchange,
@@ -61,6 +64,7 @@ func (r *RabbitMQ) SubscribeToQueue(consumerName string) ([]byte, error) {
 	}
 }
 
+// 【其实从这行到结束都没被使用到!】
 // 定义全局变量,指针类型
 var mqConn *amqp.Connection
 var mqChan *amqp.Channel
@@ -99,8 +103,7 @@ type QueueExchange struct {
 // 链接rabbitMQ
 func (r *RabbitMQNew) mqConnect() {
 	var err error
-	RabbitUrl := fmt.Sprintf("amqp://%s:%s@%s:%d/", "guest", "guest", "localhost", 5672)
-	mqConn, err = amqp.Dial(RabbitUrl)
+	mqConn, err = amqp.Dial(rabbitMqDsn)
 	r.connection = mqConn // 赋值给RabbitMQ对象
 	if err != nil {
 		fmt.Printf("MQ打开链接失败:%s \n", err)

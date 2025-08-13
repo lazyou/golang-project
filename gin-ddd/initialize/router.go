@@ -27,6 +27,7 @@ func NewRouter() *gin.Engine {
 	{
 		publicGroup.GET("/ping", api.Ping)
 	}
+
 	// 私有路由组
 	privateGroup = r.Group("admin")
 	privateGroup.Use(middle.VerifyJWTMiddleware())
@@ -35,6 +36,7 @@ func NewRouter() *gin.Engine {
 			ctx.JSON(http.StatusOK, "JWT 校验通过！")
 		})
 	}
+
 	// Swagger
 
 	// V1管理

@@ -25,6 +25,7 @@ func InitDatabase(makeDSN string, onlineDSN string) {
 	} else {
 		ormLogger = logger.Default
 	}
+
 	dbMake, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       makeDSN, // DSN data source name
 		DefaultStringSize:         256,     // string 类型字段的默认长度
@@ -92,6 +93,7 @@ func SlowQueryLog(db *gorm.DB) {
 			}
 		}
 	})
+
 	if err != nil {
 		panic(err)
 	}
@@ -106,6 +108,7 @@ func GormRateLimiter(db *gorm.DB, r *rate.Limiter) {
 			return
 		}
 	})
+
 	if err != nil {
 		panic(err)
 	}

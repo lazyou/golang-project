@@ -8,15 +8,24 @@ logSet:
   saveMaxURI: 1024
 mysqlMake:
   username: "root"
-  password: "root"
-  dbName: "xmlt_make"
+  password: "mysql80Root332211"
+  dbName: "gin_ddd_make"
   path: "127.0.0.1"
-  port: "3306"
+  port: "33888"
   autoMigrate: true
 mysqlOnline:
   username: "root"
-  password: "root"
-  dbName: "xmlt_online"
+  password: "mysql80Root332211"
+  dbName: "gin_ddd_online"
   path: "127.0.0.1"
-  port: "3306"
+  port: "33888"
   autoMigrate: true
+rabbitMq:
+  user: "mineadmin"
+  pass: "112233mineadmin"
+  host: "localhost"
+  port: 5672
+redis:
+  addr: "localhost:6379"
+  pass: "redis62default112233"
+  db: 0

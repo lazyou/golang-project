@@ -18,7 +18,7 @@ func GlobalInit() {
 	// cache 初始化
 	InitRedis()
 	// RabbitMQ初始化
-	global.RabbitMQ = utils.NewRabbitMQ("comment", "", "", "amqp://guest:guest@localhost:5672/")
+	global.RabbitMQ = utils.NewRabbitMQ("comment", "", "", global.Config.RabbitMQ.Dsn())
 	// Cron 定时组件初始化
 	global.Cron = gocron.NewScheduler(time.UTC)
 

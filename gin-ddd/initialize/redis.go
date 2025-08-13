@@ -7,9 +7,9 @@ import (
 
 func InitRedis() {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     global.Config.Redis.Addr,
+		Password: global.Config.Redis.Pass, // no password set
+		DB:       global.Config.Redis.DB,   // use default DB
 	})
 	ping := client.Ping()
 	err := ping.Err()
