@@ -1,0 +1,22 @@
+server:
+  addr: "127.0.0.1"
+  port: "80"
+  openProxy: true
+logSet:
+  logFilePath: "./config/log/"
+  logFileName: "log.txt"
+  saveMaxURI: 1024
+mysqlMake:
+  username: "root"
+  password: "root"
+  dbName: "xmlt_make"
+  path: "127.0.0.1"
+  port: "3306"
+  autoMigrate: true
+mysqlOnline:
+  username: "root"
+  password: "root"
+  dbName: "xmlt_online"
+  path: "127.0.0.1"
+  port: "3306"
+  autoMigrate: true
