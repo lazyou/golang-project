@@ -16,7 +16,6 @@ func main() {
 
 	// 注册路由
 	r := initialize.NewRouter()
-
 	// 开启定时任务
 	cron := crontask.NewUserLikeCron(global.Cron, global.Redis, global.DB_MAKE)
 	cron.SyncFromRedisToMysql()
