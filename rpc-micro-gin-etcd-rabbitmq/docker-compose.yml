@@ -7,8 +7,8 @@ networks:
 services:
   mysql:
     container_name: mysql
-    image: mysql:latest
-    restart: always
+    image: mysql:8.0.33
+    # restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=micro_todolist
@@ -17,8 +17,8 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - /etc/localtime:/etc/localtime
-      - ./config/mysql:/var/lib/mysql
-      - ./logs/mysql/log:/var/log/mysql
+      - rpc-etcd-mysql-config:/var/lib/mysql
+      - rpc-etcd-mysql-log:/var/log/mysql
 
     ports:
       - "3306:3306"
@@ -28,7 +28,7 @@ services:
   etcd:
     image: "quay.io/coreos/etcd:v3.5.5"
     container_name: etcd
-    restart: on-failure
+    # restart: on-failure
     privileged: true
     ports:
       - "2379:2379"
@@ -37,14 +37,17 @@ services:
       - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
       - "ALLOW_NONE_AUTHENTICATION=yes"
       - ETCD_API=3
-      - ETCD_CERT_FILE="/path/to/server.crt"
-      - ETCD_KEY_FILE="/path/to/server.key"
+#      - ETCD_CERT_FILE="/path/to/server.crt"
+#      - ETCD_KEY_FILE="/path/to/server.key"
       - ETCD_AUTH="simple"
       - ETCD_AUTH_USER="todolist"
       - ETCD_AUTH_PASSWORD="todolist"
     networks:
       - todolist
 
+  # 访问无效, 临时用这个【收费工具】查看 etcd 里面的数据结构 https://redisant.com/etcd
+  # 轻量级etcd web客户端. 支持etcd 2.x和etcd 3.x.
+  # 访问: http://127.0.0.1:8080/etcdkeeper
   etcd-keeper:
     image: "evildecay/etcdkeeper:latest"
     container_name: etcd-keeper
@@ -65,7 +68,7 @@ services:
     container_name: rabbitmq
     ports:
       - "5672:5672"  # AMQP 端口
-      - "15672:15672"  # 管理界面端口
+      - "1567:15672"  # 管理界面端口
     environment:
       - RABBITMQ_DEFAULT_USER=guest  # 设置 RabbitMQ 默认用户名
       - RABBITMQ_DEFAULT_PASS=guest  # 设置 RabbitMQ 默认密码
@@ -74,14 +77,22 @@ services:
 
   redis:
     container_name: redis
-    image: redis:latest
-    restart: always
+    image: redis:6.2-alpine
+    # restart: always
     environment:
       - REDIS_PASSWORD=micro_todolist
       - ALLOW_EMPTY_PASSWORD=no
     ports:
       - "6379:6379"
     volumes:
-      - /usr/local/redis:/usr/local/redis
+      - rpc-etcd-redis:/usr/local/redis
     networks:
       - todolist
+
+volumes:
+  rpc-etcd-mysql-config:
+    driver: local
+  rpc-etcd-mysql-log:
+    driver: local
+  rpc-etcd-redis:
+    driver: local

@@ -25,6 +25,6 @@ func SendMessage2MQ(body []byte) (err error) {
 		return
 	}
 
-	fmt.Println("发送MQ成功...")
+	fmt.Println("生产者-【RabbitMQ 消息入队列成功】...")
 	return
 }

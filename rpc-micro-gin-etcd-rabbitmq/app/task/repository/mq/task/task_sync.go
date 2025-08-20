@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/CocaineCong/micro-todoList/app/task/repository/mq"
 	"github.com/CocaineCong/micro-todoList/app/task/service"
@@ -39,7 +40,7 @@ func (s *SyncTask) RunTaskCreate(ctx context.Context) error {
 			}
 
 			d.Ack(false)
-
+			fmt.Println("消费者-【RabbitMQ 消息消费成功: 入数据库】...")
 		}
 	}()
 

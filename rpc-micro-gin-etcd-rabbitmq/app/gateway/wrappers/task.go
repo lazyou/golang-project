@@ -23,7 +23,7 @@ func NewTask(id uint64, name string) *pb.TaskModel {
 	}
 }
 
-// DefaultTasks 降级函数
+// DefaultTasks 降级函数【服务降级】
 func DefaultTasks(resp interface{}) {
 	models := make([]*pb.TaskModel, 0)
 	var i uint64

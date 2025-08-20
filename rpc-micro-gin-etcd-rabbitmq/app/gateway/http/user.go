@@ -20,12 +20,15 @@ func UserRegisterHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, ctl.RespError(ctx, err, "UserRegister Bind 绑定参数失败"))
 		return
 	}
+
+	// 在【网关】调用【rpc服务】
 	userResp, err := rpc.UserRegister(ctx, &req)
 	if err != nil {
 		log.LogrusObj.Errorf("UserRegister:%v", err)
 		ctx.JSON(http.StatusInternalServerError, ctl.RespError(ctx, err, "UserRegister RPC 调用失败"))
 		return
 	}
+
 	ctx.JSON(http.StatusOK, ctl.RespSuccess(ctx, userResp))
 }
 
@@ -36,16 +39,19 @@ func UserLoginHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, ctl.RespError(ctx, err, "UserLogin Bind 绑定参数失败"))
 		return
 	}
+
 	userResp, err := rpc.UserLogin(ctx, &req)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, ctl.RespError(ctx, err, "UserLogin RPC 调用失败"))
 		return
 	}
+
 	token, err := utils.GenerateToken(uint(userResp.UserDetail.Id))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, ctl.RespError(ctx, err, "GenerateToken 失败"))
 		return
 	}
+
 	res := &types.TokenData{
 		User:  userResp,
 		Token: token,
