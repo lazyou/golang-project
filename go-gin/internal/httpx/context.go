@@ -10,11 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Context 自定义Context,扩展gin.Context
+// Context 自定义Context, 扩展 gin.Context
 type Context struct {
-	*gin.Context // 继承gin.Context
+	*gin.Context // 【继承】gin.Context
 }
 
+// 【在编译时进行类型断言检查】，确保 *Context 类型实现了 Go 标准库中的 context.Context 接口
+// 等价于 var _ context.Context = (*Context)(nil), 【更推荐这么写】
 var _ context.Context = &Context{}
 
 // NewContext 创建自定义Context

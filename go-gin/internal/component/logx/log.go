@@ -12,6 +12,8 @@ type default_log struct {
 	ctx context.Context
 }
 
+// 【重要】TODO: 这是一个非常经典且巧妙的 Go 语言技巧，用来【在编译期强制检查一个类型是否实现了某个接口】
+// 【在编译期强制检查 *default_log 是否实现了 Logger 接口，如果没实现，编译失败】
 var _ Logger = (*default_log)(nil)
 
 func WithContext(ctx context.Context) Logger {

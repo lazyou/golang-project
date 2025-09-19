@@ -31,6 +31,9 @@ func Init() {
 		DB:       conf.DB,
 	}
 	rdb := redis.NewClient(options)
+	// 向 Redis 客户端注册“钩子”（Hook），在命令执行前后、出错时等时机执行自定义代码。
+	// 是一种【AOP（面向切面编程）】 思想的体现：不侵入核心逻辑，但能监控或增强行为。
+	// 【重要】ProcessHook：拦截每个 Redis 命令: 记录命令执行时间、记录执行的命令和参数、统计错误率、上报监控系统
 	rdb.AddHook(&LogHook{})
 	rdb.AddHook(&ErrHook{})
 	err := rdb.Ping(context.Background()).Err()

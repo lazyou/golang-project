@@ -23,22 +23,28 @@ import (
 	"github.com/hibiken/asynqmon"
 )
 
+// .env 配置文件位置
 var configFile = flag.String("f", "./.env", "the config file")
 
 func main() {
 
 	flag.Parse()
 
+	// 配置初始化: .env 文件配置，赋值给包内全局变量 instance【不可跨包】. TODO: 但并没有写入到 “环境变量” 里, 打包镜像时可能不方便!
 	config.Init(*configFile)
 	config.InitGlobalVars()
 	config.InitEnvironment()
 
+	// TODO: 但总觉得这种 - 先 InitConfig(conf.GetXxConf()) 在 Init() 的方式有点多余, 直接把配置信息传入 Init 不就完事?
+	// 日志初始化: zerolog
 	logx.InitConfig(config.GetLogConf())
 	logx.Init()
 
+	// mysql 初始化: grom
 	db.InitConfig(config.GetDbConf())
 	db.Init()
 
+	// redis 初始化: go-redis
 	redisx.InitConfig(config.GetRedisConf())
 	redisx.Init()
 
@@ -50,7 +56,7 @@ func main() {
 	// 初始化第三方服务地址
 	config.InitSvc()
 
-	// 初始化http服务
+	// 初始化http服务: 表单验证、中间件注册(前置-后置)、路由注册(业务)
 	engine := initHttpServer()
 
 	// 挂载监控

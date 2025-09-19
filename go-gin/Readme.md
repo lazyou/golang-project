@@ -1,3 +1,35 @@
+
+### `go.exe run cmd/api/main.go -f .env` wenb 流程要点记录
+* 【重要】`var _ Logger = (*default_log)(nil)` - 保证结构体实现了某个接口
+  * 【在编译期强制检查 `*default_log` 是否实现了 `Logger` 接口，如果没实现，编译失败】-- 变相的显示实现某个接口！
+
+* `once.Do(func() { err := filex.MustLoad(filename, &instance) })` - 只处理一次
+  *【单例|初始化配置】sync.Once 包的 Do 方法实现单例、或者配置文件初始化，避免二次覆盖(重复加载)、保证线程安全、延迟初始化
+
+
+* 包内全局变量 - `是否可导出`(跨包)的思考！ -- 【推荐】尽可能是小写字母开头、不做导出
+  * 【Go 中没有 "整个项目全局变量" 的概念, 包内全局变量 只有 是否可导出的区分(首字母大小写)】
+
+* go-redis 包的 `AddHook` 添加钩子方法(`log_hook.go`)!【重要】拦截每个 Redis 命令: 记录执行的命令-参数-时间、统计错误率、上报监控系统。
+  * 还可以: `熔断降级`错误过多时自动熔断，防止雪崩. `错误追踪`结合 Sentry、Jaeger 上报错误. `性能监控`QPS、错误率!
+
+
+* 【继承】自定义 `Context`, 扩展 `gin.Context`. 【TODO: 虽然嵌入达到继承，但是并没有给 Context 增加额外字段, 表示不理解!】
+  ```go
+  // Context 自定义Context,扩展gin.Context
+  type Context struct {
+      *gin.Context // 【继承】gin.Context
+  }
+  ```
+
+* 【重要封装】【统一web响应处理】`routergroup.go` 函数 `wrapHandlers()` **对业务响应进行了统一的包装处理**:
+  * 将一组返回 `(any, error)` 的自定义处理函数, 包装成 Gin 原生的 `gin.HandlerFunc`, **实现统一上下文、统一响应、统一错误处理的优雅 Web 编程模型**
+  * 步骤: 1. 包装成自定义 Context; 2. 调用自定义处理函数【重要】; 3. 统一处理响应（如 JSON 输出、错误处理）【重要】.
+
+
+
+
+# ===================【以下是原README.md】===================
 # go-gin : https://github.com/fanqingxuan/go-gin
 
 用gin框架配合golang方面比较优秀的库，搭建的一个项目结构，方便快速开发项目。出结果

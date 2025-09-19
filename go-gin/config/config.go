@@ -21,6 +21,7 @@ var instance *Config
 var once sync.Once
 
 func Init(filename string) {
+	// 【单例|初始化配置】sync.Once 包实现单例、或者配置文件初始化，避免二次覆盖
 	once.Do(func() {
 		err := filex.MustLoad(filename, &instance)
 		if err != nil {

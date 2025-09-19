@@ -152,15 +152,16 @@ func (group *RouterGroup) Any(relativePath string, handlers ...HandlerFunc) IRou
 	return group
 }
 
-// wrap 包装处理函数
+// 【重要】wrap 包装处理函数: 将一组返回 (any, error) 的自定义处理函数，包装成 Gin 原生的 gin.HandlerFunc，实现统一上下文、统一响应、统一错误处理的优雅 Web 编程模型。
 func wrapHandlers(handler []HandlerFunc) []gin.HandlerFunc {
 	wrapped := make([]gin.HandlerFunc, len(handler))
 	for i, h := range handler {
 		wrapped[i] = func(h HandlerFunc) gin.HandlerFunc {
+			// 还是返回匿名函数、类型为 gin.HandlerFunc, 添加了【统一响应处理】给 gin 再次处理。
 			return func(c *gin.Context) {
-				ctx := NewContext(c)
-				resp, err := h(ctx)
-				Handle(ctx, resp, err)
+				ctx := NewContext(c)   // 1. 包装成自定义 Context
+				resp, err := h(ctx)    // 2. 调用自定义处理函数【重要】
+				Handle(ctx, resp, err) // 3. 统一处理响应（如 JSON 输出、错误处理）【重要】
 			}
 		}(h)
 	}

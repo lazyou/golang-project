@@ -6,6 +6,8 @@ import (
 	"go-gin/internal/component/redisx"
 )
 
+// 配置项的统一获取和分开获取
+
 func GetAppConf() App {
 	return instance.App
 }
