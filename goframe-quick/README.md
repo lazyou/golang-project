@@ -29,3 +29,61 @@ https://goframe.org.cn/quick/install
     * 核心业务逻辑都是放到了`internal`目录下, **对外隐藏可见性**.
 
 * web 支持优雅关闭: 监听关闭信号(ctrl+c)、不再接受新请求、保证旧请求处理完
+
+
+### 接口开发
+* https://goframe.org.cn/quick/scaffold-api
+
+#### 【重要】**生成dao-do-entity代码**:
+* 数据规范-gen dao: https://goframe.org.cn/docs/cli/gen-dao
+
+* 数据库配置 `demo/hack/config.yaml`
+  
+* 生成dao-do-entity代码: `gf gen dao` || `make dao`
+
+* 很显然挺复杂，一个表生成4个go文件:
+  * `/dao/internal/user.go` - DO NOT EDIT! 封装对数据表user的访问. 该文件自动生成了一些数据结构和方法，简化对数据表的CRUD操作. 【生成覆盖】. 
+  * `/dao/user.go` - may modify! 对 `dao/internal/user.go` 的进一步封装，用于**供其他模块直接调用访问**. 【可随意修改，或者扩展dao的能力】. 【不会被覆盖】
+  * `/model/do/user.go` - DO NOT EDIT! 数据转换模型的使用. 【用来写入或更新时赋值! 避免零值问题】
+  * `/model/entity/user.go` - DO NOT EDIT! 数据结构定义与数据表字段. 
+  * **但大多不推荐修改, 而是生成覆盖!**
+
+* 【重要】生成的**do 结构体**, 在写入/更新参数、查询条件时会用到
+  * 字段全为`any`类型，避免了(如 entity 的结构体)字段其它类型零值可能不写入数据的问题。
+
+* 【重要】生成的**entity 结构体**, 在响应数据时会用到
+
+#### 【路由、请求、响应、数据验证】数据结构定义
+* https://goframe.org.cn/quick/scaffold-api-definition
+
+* 控制器文件(**一个控制器一个目录啊！**): `demo/api/user/v1/user.go`
+
+### 生成控制器代码
+* 接口规范-gen ctrl: https://goframe.org.cn/docs/cli/gen-ctrl
+  * `请求、响应的结构体`命名要规范才能生成控制器
+
+* `gf gen ctrl` 生成文件如下:
+	* `/api/user/user.go` - api接口抽象文件 - 保证控制器实现的接口完整性
+    * `/controller/user/user.go`: 空的, 管理控制器的初始化.【只生成一次,后随意修改】
+    * `/controller/user/user_new.go`: New返回控制器的接口, 管理控制器的初始化.【只生成一次,后随意修改】
+    * `/controller/user/user_v1_create.go`: 【实现业务代码】      
+    * `/controller/user/user_v1_delete.go`      
+    * `/controller/user/user_v1_update.go`      
+    * `/controller/user/user_v1_get_one.go`     
+    * `/controller/user/user_v1_get_list.go`
+
+* TODO: 也没指定控制器名、路由名或模型名就生成了？？
+
+
+### 剩下步骤
+* 引入数据库驱动: `_ "github.com/gogf/gf/contrib/drivers/mysql/v2"`
+
+* 配置数据库、日志级别、swagger文档: `manifest/config/config.yaml`
+	*  http://127.0.0.1:8000/swagger/
+
+* 路由注册: `user.NewV1()`
+
+* 启动服务: `go run main.go`
+
+* 接口测试: https://goframe.org.cn/quick/scaffold-api-run-and-test
+  * curl 命令不记录在这里, 开文档看

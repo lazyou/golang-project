@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"demo/internal/controller/user"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -24,6 +25,7 @@ var (
 				group.Middleware(ghttp.MiddlewareHandlerResponse)
 				group.Bind(
 					hello.NewV1(),
+					user.NewV1(),
 				)
 			})
 			// 阻塞运行接收客户端请求, 并监听进程信号(
