@@ -74,8 +74,7 @@ https://goframe.org.cn/quick/install
 
 * TODO: 也没指定控制器名、路由名或模型名就生成了？？
 
-
-### 剩下步骤
+#### 剩下步骤
 * 引入数据库驱动: `_ "github.com/gogf/gf/contrib/drivers/mysql/v2"`
 
 * 配置数据库、日志级别、swagger文档: `manifest/config/config.yaml`
@@ -87,3 +86,29 @@ https://goframe.org.cn/quick/install
 
 * 接口测试: https://goframe.org.cn/quick/scaffold-api-run-and-test
   * curl 命令不记录在这里, 开文档看
+
+
+### 开发工具 gf: https://goframe.org.cn/docs/cli/install
+* 安装: `go install github.com/gogf/gf/cmd/gf/v2@latest`
+
+* 查看: `gf -v`, 输出信息挺多
+
+* 升级: `gf up`
+
+* **创建项目**: `gf init`, 支持大仓、小仓模式!
+
+* 交叉编译: `gf build`, 支持系统架构(`386,amd64,arm`等)
+	* 在一种操作系统或 CPU 架构的机器上, 编译出能在另一种操作系统或架构上运行的可执行程序 -- 交叉编译.
+
+* 生成代码 `gf gen`:
+	* 接口规范【重要】: `gf gen ctrl` 先写请求、响应结构体, 才能用命令生成控制器!
+    * 数据规范【重要】: `gf gen dao` 【最常用】, 支持`分表`等!
+	* 模块规范: 不推荐, 就不看.
+    * 枚举维护:
+    * 协议编译： `gf gen pb` 一般rpc才用!
+
+* 【重要】自动编译: `gf run main.go` 监测代码变化, 开发实用.
+
+* 资源打包: `gf pack`. 将任意的文件打包为资源文件或者 Go 代码文件.
+
+* 【重要】镜像打包: `gf docker`. TODO: 由于Windows下没有docker, **此步骤未尝试**

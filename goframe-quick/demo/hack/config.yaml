@@ -11,4 +11,4 @@ gfcli:
   docker:
     build: "-a amd64 -s linux -p temp -ew"
     tagPrefixes:
-      - my.image.pub/my-app
+      - alpine:latest
