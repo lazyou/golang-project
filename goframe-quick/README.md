@@ -112,3 +112,14 @@ https://goframe.org.cn/quick/install
 * 资源打包: `gf pack`. 将任意的文件打包为资源文件或者 Go 代码文件.
 
 * 【重要】镜像打包: `gf docker`. TODO: 由于Windows下没有docker, **此步骤未尝试**
+
+
+### 核心组件 
+#### 对象管理 - g.Xxx: https://goframe.org.cn/docs/core/g
+* 见单测文件`g_test.go`, 运行某个单测 `go test -v -run Test_gMap`
+
+* 数据类型、HTTP 客户端对象、Validator 校验对象、(单例) 日志管理对象、(单例) 配置管理对象、(单例) 数据库 ORM 对象、(单例) Redis 客户端对象 等等!
+
+* 【重要】**理解 `context.WithTimeout` 超时上下文的在 curl 请求中的使用!**
+
+* 其中单例的对象, 是按传入 `name` 来算单例!
