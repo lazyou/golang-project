@@ -128,3 +128,28 @@ https://goframe.org.cn/quick/install
 * 框架内部开发者在开发阶段使用: `g.SetDebug(true)`, 日志会相当的多! 
 
 * 也支持`命令行启动参数 + 环境变量`运行: 如 `go run .\main.go --gf.debug=true`
+
+#### 命令管理 - https://goframe.org.cn/docs/core/gcmd
+* 对比 https://github.com/spf13/cobra
+	* 优点: "支持链路跟踪，便于父子进程的链路信息传递"
+
+* 【重要】**使用场景: 同一个入口, 封装不同的命令启动不同的服务(如 `api`, `queue`, `crontab`) 等! 方便容器打包启动不同的命令!**
+
+* 单元测试: `gcmd_test.go`
+
+* 【重要】基本概念: 
+  * **参数(Argument): 按照顺序进行传递、没有名称标识的数据**.
+  * **选项(Option): 以 - 或者 -- 字符串作为前缀, 无序, 可缩写`别名(Short)`**. 类似`标识(Flag)`.
+
+  * `gcmd.GetOptWithEnv`: 如果该选项不存在时，则从`环境变量`中读取
+
+* 命令解析器: `gcmd.Parser` 自定义解析选项，包括有哪些选项名称，每个选项是否带有数值
+
+* 命令行对象: `gcmd.Command` 管理单个或多个命令, 支持嵌套
+
+* 结构化参数: `g.Meta` 结构化`管理参数`
+
+* 终端交互: `gcmd.Scan|Scanf`
+
+* 跨进程的链路跟踪: "gproc.ShellRun(ctx, `go run sub.go`)"
+
