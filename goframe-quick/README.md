@@ -123,3 +123,8 @@ https://goframe.org.cn/quick/install
 * 【重要】**理解 `context.WithTimeout` 超时上下文的在 curl 请求中的使用!**
 
 * 其中单例的对象, 是按传入 `name` 来算单例!
+
+#### 调试模式 - https://goframe.org.cn/docs/core/debugging
+* 框架内部开发者在开发阶段使用: `g.SetDebug(true)`, 日志会相当的多! 
+
+* 也支持`命令行启动参数 + 环境变量`运行: 如 `go run .\main.go --gf.debug=true`
