@@ -153,3 +153,21 @@ https://goframe.org.cn/quick/install
 
 * 跨进程的链路跟踪: "gproc.ShellRun(ctx, `go run sub.go`)"
 
+#### 配置管理 - https://goframe.org.cn/docs/core/gcfg
+* 支持多种常见配置文件格式： `yaml/toml/json/xml/ini/properties`
+
+* 【重要】**配置组件也能自动根据文件名后缀识别读取**: `config.toml, config.ini, config.json`
+
+* 单元测试 `gcfg_test.go`
+
+* 默认读取 `/manifest/config/config.yaml`, 可修改.
+
+* 支持`点号形式`跨层级访问配置.
+
+* 【重要】**优先配置中读、无则环境变量中读**: `g.Cfg().GetWithEnv`.
+
+* 接口化设计(`gcfg.Adapter` 接口): 开发者可自定义对接的配置, 如 `etcd, zookeeper, consul` 等.
+
+* 从文件中加载、读取配置(默认): `gcfg.NewAdapterFile(fileNameOrPath ...string)`
+
+* 从`字符串`中加载、读取配置: `gcfg.NewAdapterContent(content ...string)`
