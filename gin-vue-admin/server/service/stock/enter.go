@@ -1,3 +1,6 @@
 package stock
 
-type ServiceGroup struct{ StockCategoryService }
+type ServiceGroup struct {
+	StockCategoryService
+	StockItemService
+}
